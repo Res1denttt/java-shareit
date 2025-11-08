@@ -48,6 +48,15 @@ public class ItemRepositoryInMemory implements ItemRepository {
         items.remove(item.getId());
     }
 
+    @Override
+    public List<Item> search(String text) {
+        return items.values().stream()
+                .filter(Item::isAvailable)
+                .filter(i -> i.getName().toLowerCase().contains(text.toLowerCase()) ||
+                        i.getDescription().toLowerCase().contains(text.toLowerCase()))
+                .toList();
+    }
+
     private static long generateId() {
         return currentId++;
     }
