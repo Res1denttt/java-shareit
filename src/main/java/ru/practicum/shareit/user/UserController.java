@@ -19,25 +19,25 @@ public class UserController {
     private final UserService service;
 
     @GetMapping
-    public List<User> findAll() {
+    public List<UserDto> findAll() {
         log.info("Поступил GET запрос на всех пользователей");
         return service.findAll();
     }
 
     @GetMapping("/{userId}")
-    public User findById(@PathVariable long userId) {
+    public UserDto findById(@PathVariable long userId) {
         log.info("Поступил GET запрос на пользователя с id = {}", userId);
         return service.findById(userId);
     }
 
     @PostMapping
-    public User create(@Valid @RequestBody User user) {
-        log.info("Поступил POST запрос на добавление пользователя = {}", user);
-        return service.save(user);
+    public UserDto create(@Valid @RequestBody UserDto userDto) {
+        log.info("Поступил POST запрос на добавление пользователя = {}", userDto);
+        return service.create(userDto);
     }
 
     @PatchMapping("/{userId}")
-    public User update(@PathVariable long userId, @Valid @RequestBody UserDto userDto) {
+    public UserDto update(@PathVariable long userId, @Valid @RequestBody UserDto userDto) {
         log.info("Поступил PATCH запрос на изменение пользователя с id ={}, данные = {}", userId, userDto);
         return service.update(userId, userDto);
     }
