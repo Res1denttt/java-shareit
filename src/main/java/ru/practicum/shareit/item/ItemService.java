@@ -11,7 +11,7 @@ public interface ItemService {
 
     List<OwnerItemDto> findAllForUser(long userId);
 
-    ItemDto findById(long userId, long ItemId);
+    ItemDto findById(long userId, long itemId);
 
     ItemDto create(long userId, ItemDto itemDto);
 
