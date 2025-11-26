@@ -51,15 +51,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("""
             select booking
             from Booking booking
-            where booking.item in :items
-                and booking.status = 'APPROVED'
-                and (booking.end < :now or booking.start > :now)
-            """)
-    List<Booking> findBookingsForItems(List<Item> items, LocalDateTime now);
-
-    @Query("""
-            select booking
-            from Booking booking
             where booking.item = :item
                 and booking.booker = :booker
                 and booking.status = 'APPROVED'

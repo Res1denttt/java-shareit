@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.ResponseBookingDto;
+import ru.practicum.shareit.booking.strategy.BookingFetchStateStrategyFactory;
 import ru.practicum.shareit.exceptions.ConditionsNotMetException;
 import ru.practicum.shareit.exceptions.InvalidOperation;
 import ru.practicum.shareit.exceptions.NotFoundException;
@@ -26,6 +27,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final BookingFetchStateStrategyFactory strategyFactory;
 
     @Transactional
     @Override
@@ -54,8 +56,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public ResponseBookingDto findById(long userId, long bookingId) {
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("Бронирование с id = " + bookingId + " не найдено"));
+        Booking booking = getBooking(bookingId);
         Item item = booking.getItem();
         if (userId != booking.getBooker().getId() && userId != item.getOwner().getId())
             throw new InvalidOperation("Просмотр бронирования доступен только для инициатора бронирования и " +
@@ -66,8 +67,7 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     @Override
     public ResponseBookingDto approve(long userId, long bookingId, boolean approved) {
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("Бронирование с id = " + bookingId + " не найдено"));
+        Booking booking = getBooking(bookingId);
         Item item = booking.getItem();
         if (userId != item.getOwner().getId())
             throw new InvalidOperation("Можно подтверждать бронирование только своих товаров");
@@ -86,14 +86,7 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(userId))
             throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         Sort sort = Sort.by("start").ascending();
-        List<Booking> bookings = switch (state) {
-            case ALL -> bookingRepository.findAllByBookerId(userId, sort);
-            case CURRENT -> bookingRepository.findCurrentByBookerId(userId);
-            case PAST -> bookingRepository.findAllByBooker_IdAndEndIsBefore(userId, LocalDateTime.now(), sort);
-            case FUTURE -> bookingRepository.findAllByBooker_IdAndStartIsAfter(userId, LocalDateTime.now(), sort);
-            case WAITING -> bookingRepository.findAllByBooker_IdAndStatus(userId, BookingStatus.WAITING, sort);
-            case REJECTED -> bookingRepository.findAllByBooker_IdAndStatus(userId, BookingStatus.REJECTED, sort);
-        };
+        List<Booking> bookings = strategyFactory.findStrategy(state).getBookings(userId, sort);
         return BookingMapper.mapToResponseBookingDto(bookings);
     }
 
@@ -111,5 +104,10 @@ public class BookingServiceImpl implements BookingService {
             case REJECTED -> bookingRepository.findAllByItemOwner_IdAndStatus(userId, BookingStatus.REJECTED, sort);
         };
         return BookingMapper.mapToResponseBookingDto(bookings);
+    }
+
+    private Booking getBooking(long id) {
+        return bookingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Бронирование с id = " + id + " не найдено"));
     }
 }

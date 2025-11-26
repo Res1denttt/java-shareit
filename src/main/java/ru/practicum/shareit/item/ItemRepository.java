@@ -22,4 +22,12 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             """)
     List<Item> search(@Param("text") String text);
 
+    @Query("""
+            select i
+            from Item i
+            left join fetch i.bookings
+            where i.id = :id
+            """)
+    Item findByIdWithRelations(long id);
+
 }

@@ -4,20 +4,15 @@ import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.ResponseBookingDto;
 import ru.practicum.shareit.item.ItemMapper;
-import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserMapper;
-import ru.practicum.shareit.user.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 public class BookingMapper {
-
-    private final UserService userService;
-    private final ItemService itemService;
 
     public static Booking mapToBooking(BookingDto dto, Item item, User booker) {
         return new Booking(dto.getStart(), dto.getEnd(), item, booker);

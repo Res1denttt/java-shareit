@@ -30,6 +30,7 @@ public final class ItemMapper {
         itemDto.setName(item.getName());
         itemDto.setDescription(item.getDescription());
         itemDto.setAvailable(item.isAvailable());
+        itemDto.setComments(CommentMapper.mapToDto(item.getComments()));
         return itemDto;
     }
 

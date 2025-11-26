@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.user.User;
+
+import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
@@ -34,4 +37,11 @@ public class Item {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
+
+    @OneToMany(mappedBy = "item")
+    private List<Booking> bookings;
+
+    @OneToMany(mappedBy = "item")
+    private List<Comment> comments;
+
 }
