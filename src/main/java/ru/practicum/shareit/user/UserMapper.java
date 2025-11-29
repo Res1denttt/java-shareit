@@ -14,4 +14,11 @@ public class UserMapper {
         return updated;
     }
 
+    public static User mapToUser(UserDto dto) {
+        return new User(dto.getName(), dto.getEmail());
+    }
+
+    public static UserDto mapToUserDto(User user) {
+        return new UserDto(user.getId(), user.getName(), user.getEmail());
+    }
 }

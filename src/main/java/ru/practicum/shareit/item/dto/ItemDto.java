@@ -3,6 +3,9 @@ package ru.practicum.shareit.item.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.springframework.util.StringUtils;
+import ru.practicum.shareit.booking.dto.BookingDto;
+
+import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
@@ -15,6 +18,9 @@ public class ItemDto {
     @NotBlank
     private String description;
     private Boolean available;
+    private BookingDto lastBooking;
+    private BookingDto nextBooking;
+    private List<CommentDto> comments;
 
     public boolean hasName() {
         return StringUtils.hasText(name);
