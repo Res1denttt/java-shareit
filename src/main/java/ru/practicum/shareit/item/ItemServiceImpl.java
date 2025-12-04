@@ -5,13 +5,15 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.exceptions.InvalidOperation;
+import ru.practicum.shareit.exceptions.InvalidOperationException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.OwnerItemDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -28,6 +30,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository requestRepository;
 
     @Override
     public List<OwnerItemDto> findAllForUser(long userId) {
@@ -68,7 +71,12 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto create(long userId, ItemDto itemDto) {
         User user = getUser(userId);
-        Item item = ItemMapper.mapToItem(user, itemDto);
+        ItemRequest request = null;
+        if (itemDto.getRequestId() != null) {
+            request = requestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new NotFoundException("Запрос товвара с id " + itemDto.getRequestId() + " не найден"));
+        }
+        Item item = ItemMapper.mapToItem(user, itemDto, request);
         itemRepository.save(item);
         return ItemMapper.mapToItemDto(item);
     }
@@ -78,7 +86,8 @@ public class ItemServiceImpl implements ItemService {
         if (!userRepository.existsById(userId))
             throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         Item oldItem = getItem(itemDto.getId());
-        if (oldItem.getOwner().getId() != userId) throw new InvalidOperation("Можно редактировать только свои товары");
+        if (oldItem.getOwner().getId() != userId)
+            throw new InvalidOperationException("Можно редактировать только свои товары");
         Item updatedItem = ItemMapper.updateFields(oldItem, itemDto);
         itemRepository.save(updatedItem);
         return ItemMapper.mapToItemDto(updatedItem);
@@ -87,7 +96,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void delete(long userId, long id) {
         Item item = getItem(id);
-        if (item.getOwner().getId() != userId) throw new InvalidOperation("Можно удалять только свои товары");
+        if (item.getOwner().getId() != userId) throw new InvalidOperationException("Можно удалять только свои товары");
         itemRepository.delete(item);
     }
 
@@ -104,7 +113,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = getItem(itemId);
         List<Booking> bookings = bookingRepository.findBookingsByItemAndBooker(item, user, LocalDateTime.now());
         if (bookings.isEmpty())
-            throw new InvalidOperation("Можно оставлять отзыв только на товары, на которые было сделано бронирование");
+            throw new InvalidOperationException("Можно оставлять отзыв только на товары, на которые было сделано бронирование");
         comment.setAuthorName(user.getName());
         comment.setItem(item);
         Comment saved = commentRepository.save(comment);

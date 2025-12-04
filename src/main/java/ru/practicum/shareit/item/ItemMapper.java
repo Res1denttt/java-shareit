@@ -7,20 +7,21 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.OwnerItemDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ItemMapper {
 
-    public static Item mapToItem(User user, ItemDto itemDto) {
+    public static Item mapToItem(User user, ItemDto itemDto, ItemRequest request) {
         Item item = new Item();
         item.setName(itemDto.getName());
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
         item.setOwner(user);
+        item.setRequest(request);
         return item;
     }
 
@@ -31,24 +32,6 @@ public final class ItemMapper {
         itemDto.setDescription(item.getDescription());
         itemDto.setAvailable(item.isAvailable());
         itemDto.setComments(CommentMapper.mapToDto(item.getComments()));
-        return itemDto;
-    }
-
-    public static List<ItemDto> mapToItemDto(Iterable<Item> items) {
-        List<ItemDto> dtos = new ArrayList<>();
-        for (Item item : items) {
-            dtos.add(mapToItemDto(item));
-        }
-        return dtos;
-    }
-
-    public static ItemDto mapToItemDto(Item item, List<CommentDto> comments) {
-        ItemDto itemDto = new ItemDto();
-        itemDto.setId(item.getId());
-        itemDto.setName(item.getName());
-        itemDto.setDescription(item.getDescription());
-        itemDto.setAvailable(item.isAvailable());
-        itemDto.setComments(comments);
         return itemDto;
     }
 
@@ -72,13 +55,5 @@ public final class ItemMapper {
         itemDto.setNextBooking(next);
         itemDto.setComments(comments);
         return itemDto;
-    }
-
-    public static List<OwnerItemDto> mapToOwnerItemDto(Iterable<Item> items, BookingDto last, BookingDto next, List<CommentDto> comments) {
-        List<OwnerItemDto> dtos = new ArrayList<>();
-        for (Item item : items) {
-            dtos.add(mapToOwnerItemDto(item, last, next, comments));
-        }
-        return dtos;
     }
 }

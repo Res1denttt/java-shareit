@@ -9,7 +9,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.ResponseBookingDto;
 import ru.practicum.shareit.booking.strategy.BookingFetchStateStrategyFactory;
 import ru.practicum.shareit.exceptions.ConditionsNotMetException;
-import ru.practicum.shareit.exceptions.InvalidOperation;
+import ru.practicum.shareit.exceptions.InvalidOperationException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
@@ -59,7 +59,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = getBooking(bookingId);
         Item item = booking.getItem();
         if (userId != booking.getBooker().getId() && userId != item.getOwner().getId())
-            throw new InvalidOperation("Просмотр бронирования доступен только для инициатора бронирования и " +
+            throw new InvalidOperationException("Просмотр бронирования доступен только для инициатора бронирования и " +
                     "владельца товара");
         return BookingMapper.mapToResponseBookingDto(booking);
     }
@@ -70,7 +70,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = getBooking(bookingId);
         Item item = booking.getItem();
         if (userId != item.getOwner().getId())
-            throw new InvalidOperation("Можно подтверждать бронирование только своих товаров");
+            throw new InvalidOperationException("Можно подтверждать бронирование только своих товаров");
         if (!item.isAvailable()) {
             booking.setStatus(BookingStatus.REJECTED);
             bookingRepository.save(booking);

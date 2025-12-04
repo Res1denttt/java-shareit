@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 import java.util.List;
@@ -43,5 +44,9 @@ public class Item {
 
     @OneToMany(mappedBy = "item")
     private List<Comment> comments;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "request_id")
+    private ItemRequest request;
 
 }

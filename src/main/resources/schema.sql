@@ -7,15 +7,26 @@ CREATE TABLE IF NOT EXISTS users (
     CONSTRAINT uq_email UNIQUE (email)
 );
 
+CREATE TABLE IF NOT EXISTS requests (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    description VARCHAR NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+
+    CONSTRAINT fk_request_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS items (
     id BIGINT GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(128) NOT NULL,
     description VARCHAR(255),
     available BOOLEAN NOT NULL,
     owner_id BIGINT NOT NULL,
+    request_id BIGINT,
 
     CONSTRAINT pk_item PRIMARY KEY (id),
-    CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+    CONSTRAINT fk_owner FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_request FOREIGN KEY (request_id) REFERENCES requests(id)
 );
 
 CREATE TABLE IF NOT EXISTS bookings (
