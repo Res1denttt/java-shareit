@@ -50,9 +50,7 @@ class ResponseBookingDtoJsonTest {
                 .item(buildItemDto())
                 .booker(buildUserDto())
                 .build();
-
         String json = objectMapper.writeValueAsString(dto);
-
         assertThat(json).contains("\"id\":1");
         assertThat(json).contains("\"status\":\"APPROVED\"");
         assertThat(json).contains("\"item\":{\"id\":3");
@@ -62,32 +60,11 @@ class ResponseBookingDtoJsonTest {
     @Test
     void testDeserializeResponseBookingDto() throws Exception {
         String json = """
-                {
-                  "id": 1,
-                  "start": "2025-12-07T10:00:00",
-                  "end": "2025-12-07T12:00:00",
-                  "status": "APPROVED",
-                  "item": {
-                    "id": 3,
-                    "name": "Дрель",
-                    "description": "ударная",
-                    "available": true,
-                    "lastBooking": null,
-                    "nextBooking": null,
-                    "comments": [],
-                    "requestId": null
-                  },
-                  "booker": {
-                    "id": 2,
-                    "email": "booker@mail.ru",
-                    "name": "booker"
-                  }
-                }
+                {"id":1,"start":"2025-12-07T10:00:00","end":"2025-12-07T12:00:00","status":"APPROVED","item":{"id":3,
+                "name":"Дрель","description":"ударная","available":true,"lastBooking":null,"nextBooking":null,"comments":[],
+                "requestId":null},"booker":{"id":2,"email":"booker@mail.ru","name":"booker"}}
                 """;
-
-        ResponseBookingDto dto =
-                objectMapper.readValue(json, ResponseBookingDto.class);
-
+        ResponseBookingDto dto = objectMapper.readValue(json, ResponseBookingDto.class);
         assertThat(dto.getId()).isEqualTo(1L);
         assertThat(dto.getStatus()).isEqualTo("APPROVED");
         assertThat(dto.getItem().getId()).isEqualTo(3L);

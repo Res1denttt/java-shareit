@@ -29,15 +29,9 @@ class ItemRequestDtoJsonTest {
 
     @Test
     void testSerializeItemRequestDto() throws Exception {
-        ItemRequestDto dto = ItemRequestDto.builder()
-                .id(1L)
-                .description("Нужна дрель для ремонта")
-                .created(Instant.parse("2025-12-06T14:30:00Z"))
-                .items(List.of(buildItemDto()))
-                .build();
-
+        ItemRequestDto dto = ItemRequestDto.builder().id(1L).description("Нужна дрель для ремонта")
+                .created(Instant.parse("2025-12-06T14:30:00Z")).items(List.of(buildItemDto())).build();
         String json = objectMapper.writeValueAsString(dto);
-
         assertThat(json).contains("\"id\":1");
         assertThat(json).contains("\"description\":\"Нужна дрель для ремонта\"");
         assertThat(json).contains("\"created\":\"2025-12-06T14:30:00Z\"");
@@ -47,23 +41,10 @@ class ItemRequestDtoJsonTest {
     @Test
     void testDeserializeItemRequestDto() throws Exception {
         String json = """
-                {
-                  "id": 1,
-                  "description": "Нужна дрель для ремонта",
-                  "created": "2025-12-06T14:30:00Z",
-                  "items": [
-                    {
-                      "id": 3,
-                      "name": "Дрель",
-                      "description": "ударная",
-                      "available": true
-                    }
-                  ]
-                }
+                {"id":1,"description":"Нужна дрель для ремонта","created":"2025-12-06T14:30:00Z",
+                "items":[{"id":3,"name":"Дрель","description":"ударная","available":true}]}
                 """;
-
         ItemRequestDto dto = objectMapper.readValue(json, ItemRequestDto.class);
-
         assertThat(dto.getId()).isEqualTo(1L);
         assertThat(dto.getDescription()).isEqualTo("Нужна дрель для ремонта");
         assertThat(dto.getCreated()).isEqualTo(Instant.parse("2025-12-06T14:30:00Z"));
