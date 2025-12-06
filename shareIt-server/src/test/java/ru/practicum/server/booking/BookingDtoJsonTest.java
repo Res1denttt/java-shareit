@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
- public class BookingDtoJsonTest {
+public class BookingDtoJsonTest {
 
     @Autowired
     private ObjectMapper objectMapper;
