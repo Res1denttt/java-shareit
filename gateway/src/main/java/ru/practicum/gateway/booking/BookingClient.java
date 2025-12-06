@@ -13,7 +13,7 @@ import java.util.Map;
 public class BookingClient extends BaseClient {
     private static final String URL = "/bookings";
 
-    @Value("${server.host}")
+    @Value("${shareit-server.url}")
     private String host;
 
     public BookingClient(RestTemplate rest) {

@@ -11,7 +11,7 @@ import ru.practicum.gateway.configuration.BaseClient;
 public class ItemRequestClient extends BaseClient {
     private static final String URL = "/requests";
 
-    @Value("${server.host}")
+    @Value("${shareit-server.url}")
     private String host;
 
     public ItemRequestClient(RestTemplate rest) {

@@ -14,7 +14,7 @@ import java.util.Map;
 public class ItemClient extends BaseClient {
     private static final String URL = "/items";
 
-    @Value("${server.host}")
+    @Value("${shareit-server.url}")
     private String host;
 
     public ItemClient(RestTemplate rest) {

@@ -12,7 +12,7 @@ import ru.practicum.gateway.configuration.BaseClient;
 public class UserClient extends BaseClient {
     private static final String URL = "/users";
 
-    @Value("${server.host}")
+    @Value("${shareit-server.url}")
     private String host;
 
     public UserClient(RestTemplate rest) {

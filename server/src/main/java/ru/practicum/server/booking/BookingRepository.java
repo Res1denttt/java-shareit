@@ -54,7 +54,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             where booking.item = :item
                 and booking.booker = :booker
                 and booking.status = 'APPROVED'
-                and booking.start < :now
+                and booking.start <= :now
             """)
     List<Booking> findBookingsByItemAndBooker(Item item, User booker, LocalDateTime now);
 }
