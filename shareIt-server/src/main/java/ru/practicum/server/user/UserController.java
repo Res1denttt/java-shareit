@@ -1,6 +1,5 @@
 package ru.practicum.server.user;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +31,13 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto create(@Valid @RequestBody UserDto userDto) {
+    public UserDto create(@RequestBody UserDto userDto) {
         log.info("Поступил POST запрос на добавление пользователя = {}", userDto);
         return service.create(userDto);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto update(@PathVariable long userId, @Valid @RequestBody UserDto userDto) {
+    public UserDto update(@PathVariable long userId, @RequestBody UserDto userDto) {
         log.info("Поступил PATCH запрос на изменение пользователя с id ={}, данные = {}", userId, userDto);
         return service.update(userId, userDto);
     }

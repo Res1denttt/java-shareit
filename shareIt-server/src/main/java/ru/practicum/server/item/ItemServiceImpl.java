@@ -2,6 +2,7 @@ package ru.practicum.server.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.item.NewCommentDto;
 import ru.practicum.server.booking.Booking;
 import ru.practicum.server.booking.BookingMapper;
@@ -21,7 +22,6 @@ import ru.practicum.server.user.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,12 +33,13 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
     private final ItemRequestRepository requestRepository;
 
+    @Transactional
     @Override
     public List<OwnerItemDto> findAllForUser(long userId) {
         List<Item> items = itemRepository.findAllByOwnerId(userId);
         return items.stream()
                 .map(this::mapItemWithLastAndNextBookings)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -48,18 +49,22 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private OwnerItemDto mapItemWithLastAndNextBookings(Item item) {
-
         LocalDateTime now = LocalDateTime.now();
 
-        Booking lastBooking = item.getBookings().stream()
-                .filter(b -> b.getEnd().isBefore(now))
-                .max(Comparator.comparing(Booking::getEnd))
-                .orElse(null);
+        Booking lastBooking = null;
+        Booking nextBooking = null;
 
-        Booking nextBooking = item.getBookings().stream()
-                .filter(b -> b.getStart().isAfter(now))
-                .min(Comparator.comparing(Booking::getStart))
-                .orElse(null);
+        if (item.getBookings() != null) {
+            lastBooking = item.getBookings().stream()
+                    .filter(b -> b.getEnd() != null && b.getEnd().isBefore(now))
+                    .max(Comparator.comparing(Booking::getEnd))
+                    .orElse(null);
+
+            nextBooking = item.getBookings().stream()
+                    .filter(b -> b.getStart() != null && b.getStart().isAfter(now))
+                    .min(Comparator.comparing(Booking::getStart))
+                    .orElse(null);
+        }
 
         return ItemMapper.mapToOwnerItemDto(
                 item,
@@ -78,7 +83,7 @@ public class ItemServiceImpl implements ItemService {
                     .orElseThrow(() -> new NotFoundException("Запрос товвара с id " + itemDto.getRequestId() + " не найден"));
         }
         Item item = ItemMapper.mapToItem(user, itemDto, request);
-        itemRepository.save(item);
+        item = itemRepository.save(item);
         return ItemMapper.mapToItemDto(item);
     }
 
@@ -90,7 +95,7 @@ public class ItemServiceImpl implements ItemService {
         if (oldItem.getOwner().getId() != userId)
             throw new InvalidOperationException("Можно редактировать только свои товары");
         Item updatedItem = ItemMapper.updateFields(oldItem, itemDto);
-        itemRepository.save(updatedItem);
+        updatedItem = itemRepository.save(updatedItem);
         return ItemMapper.mapToItemDto(updatedItem);
     }
 

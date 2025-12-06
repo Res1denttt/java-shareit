@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import ru.practicum.dto.item.CommentDto;
 import ru.practicum.dto.item.ItemDto;
 import ru.practicum.dto.item.NewCommentDto;
 import ru.practicum.gateway.configuration.BaseClient;

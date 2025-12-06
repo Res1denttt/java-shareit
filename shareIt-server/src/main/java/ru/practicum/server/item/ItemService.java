@@ -4,7 +4,6 @@ import ru.practicum.dto.item.CommentDto;
 import ru.practicum.dto.item.ItemDto;
 import ru.practicum.dto.item.NewCommentDto;
 import ru.practicum.dto.item.OwnerItemDto;
-import ru.practicum.server.item.model.Comment;
 
 import java.util.List;
 

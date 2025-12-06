@@ -32,6 +32,9 @@ public final class ItemMapper {
         itemDto.setDescription(item.getDescription());
         itemDto.setAvailable(item.isAvailable());
         itemDto.setComments(CommentMapper.mapToDto(item.getComments()));
+        if (item.getRequest() != null) {
+            itemDto.setRequestId(item.getRequest().getId());
+        }
         return itemDto;
     }
 

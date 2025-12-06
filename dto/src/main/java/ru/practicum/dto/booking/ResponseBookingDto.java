@@ -2,13 +2,10 @@ package ru.practicum.dto.booking;
 
 import lombok.Builder;
 import lombok.Getter;
-import ru.practicum.dto.item.CommentDto;
 import ru.practicum.dto.item.ItemDto;
 import ru.practicum.dto.user.UserDto;
 
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Builder
 @Getter

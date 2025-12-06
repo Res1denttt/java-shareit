@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.item.CommentDto;
 import ru.practicum.dto.item.ItemDto;
 import ru.practicum.dto.item.NewCommentDto;
 
@@ -23,7 +22,7 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> findById(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long itemId) {
-        return client.findById(userId,itemId);
+        return client.findById(userId, itemId);
     }
 
     @PostMapping
@@ -33,7 +32,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> update(@RequestHeader("X-Sharer-User-Id") long userId, @RequestBody ItemDto itemDto,
-                          @PathVariable long itemId) {
+                                         @PathVariable long itemId) {
         return client.update(userId, itemDto, itemId);
     }
 
@@ -49,8 +48,8 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> createComment(@RequestHeader("X-Sharer-User-Id") long userId,
-                                    @PathVariable long itemId,
-                                    @RequestBody NewCommentDto commentDto) {
+                                                @PathVariable long itemId,
+                                                @RequestBody NewCommentDto commentDto) {
         return client.createComment(userId, itemId, commentDto);
     }
 }

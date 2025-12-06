@@ -1,6 +1,5 @@
 package ru.practicum.server.item;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +7,6 @@ import ru.practicum.dto.item.CommentDto;
 import ru.practicum.dto.item.ItemDto;
 import ru.practicum.dto.item.NewCommentDto;
 import ru.practicum.dto.item.OwnerItemDto;
-import ru.practicum.server.item.model.Comment;
 
 import java.util.List;
 
@@ -36,7 +34,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto create(@RequestHeader("X-Sharer-User-Id") long userId, @Valid @RequestBody ItemDto itemDto) {
+    public ItemDto create(@RequestHeader("X-Sharer-User-Id") long userId, @RequestBody ItemDto itemDto) {
         log.info("Поступил POST запрос на добавление товара {} для пользователя с id = {}", itemDto, userId);
         return service.create(userId, itemDto);
     }
@@ -66,6 +64,7 @@ public class ItemController {
     public CommentDto createComment(@RequestHeader("X-Sharer-User-Id") long userId,
                                     @PathVariable long itemId,
                                     @RequestBody NewCommentDto dto) {
+        log.info("Поступил Post запрос на создание комменатрия к товару с id = {}", itemId);
         return service.createComment(userId, itemId, dto);
     }
 }
