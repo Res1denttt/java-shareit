@@ -40,10 +40,8 @@ class ItemRequestDtoJsonTest {
 
     @Test
     void testDeserializeItemRequestDto() throws Exception {
-        String json = """
-                {"id":1,"description":"Нужна дрель для ремонта","created":"2025-12-06T14:30:00Z",
-                "items":[{"id":3,"name":"Дрель","description":"ударная","available":true}]}
-                """;
+        String json = "{\"id\":1,\"description\":\"Нужна дрель для ремонта\",\"created\":\"2025-12-06T14:30:00Z\"," +
+                "\"items\":[{\"id\":3,\"name\":\"Дрель\",\"description\":\"ударная\",\"available\":true}]}";
         ItemRequestDto dto = objectMapper.readValue(json, ItemRequestDto.class);
         assertThat(dto.getId()).isEqualTo(1L);
         assertThat(dto.getDescription()).isEqualTo("Нужна дрель для ремонта");

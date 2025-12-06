@@ -29,8 +29,8 @@ class ItemDtoJsonTest {
     }
 
     private CommentDto buildCommentDto() {
-        return new CommentDto(1L, "Отличная дрель!", "Иван Иванов", LocalDateTime.of(2025,
-                12, 6, 14, 30), 3L);
+        return new CommentDto(1L, "Отличная дрель!", "Иван Иванов",
+                LocalDateTime.of(2025, 12, 6, 14, 30), 3L);
     }
 
     @Test
@@ -56,11 +56,10 @@ class ItemDtoJsonTest {
 
     @Test
     void testDeserializeItemDto() throws Exception {
-        String json = """
-                {"id":3,"name":"Дрель","description":"ударная","available":true,"lastBooking":{"id":1,"start":"2025-12-06T10:00:00",
-                "end":"2025-12-06T12:00:00","itemId":3},"nextBooking":null,"comments":[{"id":1,"text":"Отличная дрель!",
-                "authorName":"Иван Иванов","created":"2025-12-06T14:30:00","itemId":3}],"requestId":null}
-                """;
+        String json = "{\"id\":3,\"name\":\"Дрель\",\"description\":\"ударная\",\"available\":true,\"lastBooking\":{\"id\":1," +
+                "\"start\":\"2025-12-06T10:00:00\",\"end\":\"2025-12-06T12:00:00\",\"itemId\":3},\"nextBooking\":null," +
+                "\"comments\":[{\"id\":1,\"text\":\"Отличная дрель!\",\"authorName\":\"Иван Иванов\",\"created\":\"2025-12-06T14:30:00\"," +
+                "\"itemId\":3}],\"requestId\":null}";
         ItemDto dto = objectMapper.readValue(json, ItemDto.class);
         assertThat(dto.getId()).isEqualTo(3L);
         assertThat(dto.getName()).isEqualTo("Дрель");
@@ -71,4 +70,3 @@ class ItemDtoJsonTest {
         assertThat(dto.getComments().get(0).getText()).isEqualTo("Отличная дрель!");
     }
 }
-
