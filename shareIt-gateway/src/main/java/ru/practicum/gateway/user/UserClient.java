@@ -10,7 +10,7 @@ import ru.practicum.gateway.configuration.BaseClient;
 
 @Service
 public class UserClient extends BaseClient {
-    private final String URL = "/users";
+    private static final String URL = "/users";
 
     @Value("${server.host}")
     private String host;
