@@ -11,7 +11,9 @@ services:
       - SHAREIT_SERVER_URL=http://server:9090
 
   server:
-    build: server
+    build:
+      context: ./server/service
+      dockerfile: Dockerfile
     image: shareit-server
     container_name: shareit-server
     ports:
