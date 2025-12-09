@@ -24,6 +24,7 @@
     <modules>
         <module>gateway</module>
         <module>server</module>
+        <module>dto</module>
     </modules>
 
     <dependencies>
